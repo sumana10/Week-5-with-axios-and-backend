@@ -2,7 +2,7 @@ import { Button, Card, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import {useNavigate} from "react-router-dom";
 
-function Courses() {
+const Courses = () => {
     const [courses, setCourses] = useState([]);
     
     useEffect(() => {

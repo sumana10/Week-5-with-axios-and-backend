@@ -147,3 +147,145 @@ const coursesState = atom({
   key: 'coursesState',
   default: '', 
 });
+
+// import { Card } from "@mui/material";
+// import { useEffect } from "react";
+// import { useParams } from "react-router-dom";
+// import { Typography, TextField, Button } from "@mui/material";
+// import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+
+// // Define atom for courses state
+// const coursesState = atom({
+//   key: 'coursesState',
+//   default: [],
+// });
+
+// function Course() {
+//   const { courseId } = useParams();
+//   console.log("hi there from course");
+
+//   const setCourses = useSetRecoilState(coursesState);
+//   const courses = useRecoilValue(coursesState);
+
+//   useEffect(() => {
+//     fetch("http://localhost:3000/admin/courses/", {
+//       method: "GET",
+//       headers: {
+//         "Authorization": "Bearer " + localStorage.getItem("token"),
+//       },
+//     })
+//       .then(res => res.json())
+//       .then(data => {
+//         setCourses(data.courses);
+//       });
+//   }, [setCourses]);
+
+//   return (
+//     <div>
+//       <CourseCard courseId={courseId} />
+//       <UpdateCard courseId={courseId} />
+//     </div>
+//   );
+// }
+
+// function UpdateCard(props) {
+//   console.log("hi there from update card");
+//   const [updatedCourse, setUpdatedCourse] = useState({
+//     title: "",
+//     description: "",
+//     imageLink: "",
+//   });
+//   const courses = useRecoilValue(coursesState);
+
+//   console.log("UpdateCard rerendered");
+
+//   const updateCourse = () => {
+//     const updatedCourses = courses.map(course => {
+//       if (course.id === props.courseId) {
+//         return { ...course, ...updatedCourse };
+//       }
+//       return course;
+//     });
+
+//     fetch("http://localhost:3000/admin/courses/" + props.courseId, {
+//       method: "PUT",
+//       body: JSON.stringify({
+//         ...updatedCourse,
+//         published: true,
+//       }),
+//       headers: {
+//         "Content-type": "application/json",
+//         "Authorization": "Bearer " + localStorage.getItem("token"),
+//       },
+//     }).then(response => {
+//       if (response.ok) {
+//         setCourses(updatedCourses);
+//       }
+//     });
+//   };
+
+//   return (
+//     <div style={{ display: "flex", justifyContent: "center" }}>
+//       <Card variant={"outlined"} style={{ width: 400, padding: 20 }}>
+//         <Typography>Update course details</Typography>
+//         <TextField
+//           onChange={(e) => {
+//             setUpdatedCourse({ ...updatedCourse, title: e.target.value });
+//           }}
+//           fullWidth={true}
+//           label="Title"
+//           variant="outlined"
+//         />
+
+//         <TextField
+//           onChange={(e) => {
+//             setUpdatedCourse({ ...updatedCourse, description: e.target.value });
+//           }}
+//           fullWidth={true}
+//           label="Description"
+//           variant="outlined"
+//         />
+
+//         <TextField
+//           onChange={(e) => {
+//             setUpdatedCourse({ ...updatedCourse, imageLink: e.target.value });
+//           }}
+//           fullWidth={true}
+//           label="Image link"
+//           variant="outlined"
+//         />
+
+//         <Button
+//           size={"large"}
+//           variant="contained"
+//           onClick={updateCourse}
+//         >
+//           Update course
+//         </Button>
+//       </Card>
+//     </div>
+//   );
+// }
+
+// function CourseCard(props) {
+//   const courses = useRecoilValue(coursesState);
+//   const course = courses.find(course => course.id === props.courseId);
+  
+//   console.log("coursecard rerendered");
+
+//   if (!course) {
+//     return "loading...";
+//   }
+
+//   return (
+//     <div style={{ display: "flex", justifyContent: "center" }}>
+//       <Card style={{ margin: 10, width: 300, minHeight: 200 }}>
+//         <Typography textAlign={"center"} variant="h5">{course.title}</Typography>
+//         <Typography textAlign={"center"} variant="subtitle1">{course.description}</Typography>
+//         <img src={course.imageLink} style={{ width: 300 }} alt="Course" />
+//       </Card>
+//     </div>
+//   );
+// }
+
+// export default Course;
