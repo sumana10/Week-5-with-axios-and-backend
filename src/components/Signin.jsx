@@ -1,16 +1,30 @@
 import Button from '@mui/material/Button';
 import TextField from "@mui/material/TextField";
-import { Card, Typography } from "@mui/material";
-import { useState } from "react";
+import { Card, Typography, FormControlLabel, Checkbox } from "@mui/material";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-
+import { signin } from '../helper/apicalls';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import jwtDecode from 'jwt-decode';
 
 const Signin = () => {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const navigate = useNavigate();
+    const [message, setMessage] = useState('hello')
+
+    const [isChecked, setIsChecked] = useState(true);
+
+    useEffect(() => {
+        console.log(isChecked);
+    }, [isChecked]);
+
+    const handleChange = (event) => {
+        setIsChecked(event.target.checked);
+    };
 
     const stylex = {
         paddingTop: 150,
@@ -46,13 +60,23 @@ const Signin = () => {
                         variant="outlined"
                         type={"password"}
                     />
-                    <br /><br />
+                    <br />
+                    <br />
+                    <FormControlLabel
+                        control={<Checkbox checked={isChecked} onChange={handleChange} />}
+                        label="Admin"
+                    />
+                    <br />
+                    <br />
 
                     <Button
                         size="large"
                         variant="contained"
+
+
                         onClick={async () => {
                             try {
+
                                 const config = {
                                     headers: {
                                         "Content-type": "application/json",
@@ -60,21 +84,26 @@ const Signin = () => {
                                         password: password,
                                     },
                                 };
+                                const data = await signin(config, isChecked);
 
-                                const res = await axios.post(
-                                    "http://localhost:3000/admin/login",
-                                    {},
-                                    config
-                                );
-
-                                const data = res.data;
-                                localStorage.setItem("token", data.token);
-                                navigate('/courses');
-                               // window.location ='/'
+                                if (data.token) {
+                                    const decodedToken = jwtDecode(data.token);
+                                    const role = decodedToken.role;
+                                    console.log('Role:', role);
+                                    localStorage.setItem('token', data.token);
+                                   // navigate('/courses');
+                                    window.location.href = '/courses';
+                                }
+                                else {
+                                    // console.log(data);
+                                    setMessage(data)
+                                    toast(data);
+                                }
                             } catch (error) {
-                                console.error('Error during signin:', error);
+                                console.error("Axios error:", error);
                             }
-                        }}
+                        }
+                        }
                     >
                         Signin
                     </Button>

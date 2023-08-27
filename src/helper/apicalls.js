@@ -18,3 +18,36 @@ export const getData = async () => {
         throw error;
     }
 };
+
+export const signup = async (email, password, isChecked) => {
+    try {
+        let route = '/user/signup';
+        if(isChecked)
+        route = '/admin/signup';
+        const response = await axios.post(`${apiUrl}${route}`, {
+          username: email,
+          password: password,
+        });
+        const data = response.data;
+        return data;
+      } catch (error) {
+        console.error('Error during signup:', error.response.data.message);
+        //throw error;
+        return error.response.data.message;
+      }
+}
+
+export const signin = async (config, isChecked) => {
+    try {
+        let route = '/user/login';
+        if(isChecked)
+        route = '/admin/login';
+        const response = await axios.post(`${apiUrl}${route}`, {}, config);
+        const data = response.data;
+        return data;
+      } catch (error) {
+        console.error('Error during signup:', error);
+        return error.response.data.message;
+      //  throw error;
+      }
+}

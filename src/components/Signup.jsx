@@ -1,12 +1,26 @@
-import React, { useState } from 'react';
-import { Card, Typography, Button, TextField, Link } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Card, Typography, Button, TextField, Link, Checkbox, FormControlLabel } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { signup } from '../helper/apicalls';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [message, setMessage] = useState('hello')
+
+  const [isChecked, setIsChecked] = useState(true);
+
+  useEffect(() => {
+    console.log(isChecked);
+  }, [isChecked]);
+
+  const handleChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
 
   const stylex = {
     paddingTop: 150,
@@ -48,39 +62,51 @@ const Signup = () => {
           />
           <br />
           <br />
+          <FormControlLabel
+            control={<Checkbox checked={isChecked} onChange={handleChange} />}
+            label="Admin"
+          />
+          <br />
+          <br />
           <Button
-            style={{marginRight: "10px"}}
+            style={{ marginRight: "10px" }}
             size={'large'}
             variant="contained"
             onClick={async () => {
-                try {
-                    const response = await axios.post('http://localhost:3000/admin/signup', {
-                      username: email,
-                      password: password,
-                    });
-              
-                    const data = response.data;
-                    localStorage.setItem('token', data.token);
-                    navigate('/courses');
-                  } catch (error) {
-                    console.error('Error during signup:', error);
-                  }
+              try {
+                const data = await signup(email, password, isChecked);
+
+                if(data.token){
+                  localStorage.setItem('token', data.token);
+                  navigate('/courses');
                 }
+                else {
+                  // console.log(data);
+                  setMessage(data)
+                  toast(data);
+                }
+
+              } catch (error) {
+                console.error("Axios error:", error);
+              }
+            }
             }
           >
             Signup
           </Button>
           <Link
-  component="button"
-  variant="body2"
-  onClick={() => {
-    navigate('/signin')
-  }}
->
-  Signin
-</Link>
+            component="button"
+            variant="body2"
+            onClick={() => {
+              navigate('/signin')
+            }}
+          >
+            Signin
+          </Link>
         </Card>
+       
       </div>
+     
     </div>
   );
 }

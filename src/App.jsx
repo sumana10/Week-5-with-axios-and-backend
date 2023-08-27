@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Appbar from "./Appbar.jsx";
 import { Signin, Signup, AddCourse, Courses, Course } from './components'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
 
     const stylex = {
@@ -15,6 +17,7 @@ const App = () => {
             
             <Router>
                 <Appbar />
+                <ToastContainer />
                 <Routes>
                     <Route path="/" element={<Signup/>}/>
                     <Route path={"/addcourse"} element={<AddCourse />} />
